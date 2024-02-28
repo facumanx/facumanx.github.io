@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar Transacción</title>
+</head>
+<body>
+    <h1>Realizar Transacción</h1>
+
+    <form id="transactionForm">
+        <label for="symbol">Símbolo del Activo:</label>
+        <input type="text" id="symbol" name="symbol" required><br><br>
+
+        <label for="type">Tipo de Transacción:</label>
+        <select id="type" name="type" required>
+            <option value="buy">Compra</option>
+            <option value="sell">Venta</option>
+        </select><br><br>
+
+        <label for="price">Precio:</label>
+        <input type="number" id="price" name="price" min="0" step="any" required><br><br>
+
+        <label for="amount">Cantidad:</label>
+        <input type="number" id="amount" name="amount" min="0" step="any" required><br><br>
+
+        <button type="submit">Realizar Transacción</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('transactionForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const symbol = document.getElementById('symbol').value;
+            const type = document.getElementById('type').value;
+            const price = document.getElementById('price').value;
+            const amount = document.getElementById('amount').value;
+
+            try {
+                const response = await fetch('/realizar-transaccion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ symbol, type, price, amount })
+                });
+
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data);
+            } catch (error) {
+                console.error('Error al realizar la transacción:', error);
+                document.getElementById('result').innerText = 'Error al realizar la transacción';
+            }
+        });
+    </script>
+</body>
+</html>
